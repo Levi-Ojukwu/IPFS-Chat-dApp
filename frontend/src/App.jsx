@@ -1,16 +1,18 @@
 import { configureWeb3Modal } from "./connection";
 import Header from "./components/Header";
+import { useState } from "react";
+import RegisterName from "./components/Register";
 
 import "./output.css"
 
 configureWeb3Modal();
 
+
 function App() {
   return(
     <>
-      <container>
         <Header /> 
-      </container>
+        <RegisterName />
     </>
   );
 } 

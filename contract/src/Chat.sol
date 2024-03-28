@@ -17,11 +17,11 @@ contract ChatDapp {
 
     mapping(uint256 => Message[]) chatSession;
 
-    event MessageSent(
-        address indexed sender,
-        address indexed receiver,
-        uint256 timestamp
-    );
+    // event MessageSent(
+    //     address indexed sender,
+    //     address indexed receiver,
+    //     uint256 timestamp
+    // );
 
     function sendMessage(address _receiver, bytes32 _content) external {
         uint256 _chatSession = chatCheck(msg.sender, _receiver);
