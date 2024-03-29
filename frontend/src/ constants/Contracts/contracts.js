@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import ens from "./ABIs/nameService.json";
+import ens from "../ABIs/nameServiceAbi.json";
 
 export const getProposalsContract = (providerOrSigner) =>
     new ethers.Contract(

@@ -2,6 +2,8 @@ import { configureWeb3Modal } from "./connection";
 import Header from "./components/Header";
 import { useState } from "react";
 import RegisterName from "./components/Register";
+import Hero from "./components/Hero";
+import Toaster from "react-hot-toast";
 
 import "./output.css"
 
@@ -12,7 +14,9 @@ function App() {
   return(
     <>
         <Header /> 
+        <Hero />
         <RegisterName />
+        <Toaster position="to-right" />
     </>
   );
 } 
