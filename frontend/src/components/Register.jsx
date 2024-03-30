@@ -1,22 +1,21 @@
 // import { Camera, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { ethers } from "ethers";
-
-// import { useNavigate } from "react-router-dom";
-
-import { isSupportedChain } from "../utils";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { getProposalsContract } from "../ constants/Contracts/contracts";
 import { getProvider } from "../ constants/Contracts/providers";
 import { useWeb3ModalProvider } from "@web3modal/ethers/react";
+import Hero from "./Hero";
 
 export default function RegisterENS() {
   const [selectedFile, setSelectedFile] = useState();
   const [ensName, setEnsName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  // const navigate = useNavigate();
-
+  // const [isLoading, setIsLoading] = useState(false);
   const { walletProvider } = useWeb3ModalProvider();
+  const navigate = useNavigate();
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -58,6 +57,7 @@ export default function RegisterENS() {
 
         if (receipt.status) {
           notification = "Account created successfully";
+          navigate("/chat")
         } else {
           return toast.error("Account creation failed");
         }
@@ -155,12 +155,14 @@ export default function RegisterENS() {
   // };
 
   return (
-    <div className="ml-20 mt-28 items-center justify-center">
+    <div>
+      <Hero />
+      <div className="ml-20 mt-28">
       <div className="my-12 ml-5 border-2 border-purple-700 bg-purple-300 max-w-lg p-8 rounded-lg">
         <input
           type="file"
           accept="image/*"
-          // hidden
+          hidden
           className="hidden"
           id="selectFile"
           onChange={(e) => setSelectedFile(e.target.files[0])}
@@ -176,7 +178,10 @@ export default function RegisterENS() {
               alt="Selected File"
             />
           ) : (
-            <img className="w-30 h-20 rounded-md border-purple-600 border-2 p-0" src="../images/purple-cloud.png" alt="dApp Logo" />
+            <div>
+            <img className="w-30 h-20 rounded-md border-purple-600 border-2 border-dashed p-0" src="../images/purple-cloud.png" alt="dApp Logo" />
+            <p className="text-purple-800 font-semibold">Upload Image</p>
+            </div>
           )}
         </label>
 
@@ -188,7 +193,7 @@ export default function RegisterENS() {
             <label className="text-md font-bold">ENS Name</label>
             <input
               value={ensName}
-              placeholder="Ojukwu.Eth"
+              placeholder="Code.With.Ojukwu"
               onChange={(e) => setEnsName(e.target.value)}
               className="rounded-md bg-purple-50 text-gray-700 font-medium pl-2 h-10"
             />
@@ -198,17 +203,9 @@ export default function RegisterENS() {
         </form>
       </div>
     </div>
+    </div>
   );
 }
-
-
-
-
-
-
-
-
-
 
 
 

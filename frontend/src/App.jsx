@@ -1,11 +1,13 @@
 import { configureWeb3Modal } from "./connection";
 import Header from "./components/Header";
+import {Routes, Route, Navigate} from "react-router-dom";
 import { useState } from "react";
 import RegisterName from "./components/Register";
 import Hero from "./components/Hero";
-import Toaster from "react-hot-toast";
+import { ToastContainer } from "react-toastify";  
+import Chat from "./components/Chat";
+import "./output.css";
 
-import "./output.css"
 
 configureWeb3Modal();
 
@@ -14,9 +16,12 @@ function App() {
   return(
     <>
         <Header /> 
-        <Hero />
-        <RegisterName />
-        <Toaster position="to-right" />
+        <Routes>
+          <Route path="/" element={<RegisterName />}></Route>
+          <Route path="/chat" element={<Chat />}></Route>
+        </Routes>
+        
+        <ToastContainer theme="light" hideProgressBar={true} />
     </>
   );
 } 

@@ -5,57 +5,79 @@ import {LibENSErrors, LibENSEvents} from "./libraries/LibNameService.sol";
 
 contract NameService {
     struct DomainDetails {
-        string domainName;
-        string avatarURI;
+        string ensName;
+        string displayURI;
         address owner;
     }
 
     mapping(string => address) public nameToAddress;
     mapping(string => DomainDetails) public domains;
 
+    // This is to store registered names
+    string[] public registeredNames;
+
     function getDomainDetails(
-        string memory _domainName
+        string memory _ensName
     ) public view returns (string memory, string memory, address) {
-        if (nameToAddress[_domainName] == address(0)) {
-            revert LibENSErrors.DomainNotRegistered();
+        if (nameToAddress[_ensName] == address(0)) {
+            revert LibENSErrors.EnsNotRegistered();
         }
 
         return (
-            domains[_domainName].domainName,
-            domains[_domainName].avatarURI,
-            domains[_domainName].owner
+            domains[_ensName].ensName,
+            domains[_ensName].displayURI,
+            domains[_ensName].owner
         );
     }
 
     function registerNameService(
-        string memory _domainName,
-        string memory _avatarURI
+        string memory _ensName,
+        string memory displayURI
     ) public {
-        if (nameToAddress[_domainName] != address(0)) {
+        if (nameToAddress[_ensName] != address(0)) {
             revert LibENSErrors.NameAlreadyTaken();
         }
-        nameToAddress[_domainName] = msg.sender;
-        domains[_domainName] = DomainDetails(
-            _domainName,
-            _avatarURI,
+        nameToAddress[_ensName] = msg.sender;
+        domains[_ensName] = DomainDetails(
+            _ensName,
+            displayURI,
             msg.sender
         );
 
-        emit LibENSEvents.NameRegistered(msg.sender, _domainName);
+        emit LibENSEvents.NameRegistered(msg.sender, _ensName);
     }
 
-    function updateDomainAvatar(
-        string memory _domainName,
-        string memory _avatarURI
+    function updateEnsDP(
+        string memory _ensName,
+        string memory _displayURI
     ) public {
-        if (nameToAddress[_domainName] == address(0)) {
-            revert LibENSErrors.DomainNotRegistered();
+        if (nameToAddress[_ensName] == address(0)) {
+            revert LibENSErrors.EnsNotRegistered();
         }
-        if (nameToAddress[_domainName] != msg.sender) {
-            revert LibENSErrors.NotDomainOwner();
+        if (nameToAddress[_ensName] != msg.sender) {
+            revert LibENSErrors.NotEnsOwner();
         }
 
-        domains[_domainName].avatarURI = _avatarURI;
-        emit LibENSEvents.AvatarUpdated(msg.sender, _domainName);
+        domains[_ensName].displayURI = _displayURI;
+        emit LibENSEvents.DPUpdated(msg.sender, _ensName);
+    }
+
+    function updateUserName(
+        string memory _ensName,
+        string memory _userName
+    ) public {
+        if (nameToAddress[_ensName] == address(0)) {
+            revert LibENSErrors.EnsNotRegistered();
+        }
+        if (nameToAddress[_ensName] != msg.sender) {
+            revert LibENSErrors.NotEnsOwner();
+        }
+
+        domains[_ensName].displayURI = _userName;
+        emit LibENSEvents.DPUpdated(msg.sender, _ensName);
+    }
+
+    function getAllRegisteredUsers() public view returns (string[] memory) {
+        return registeredNames;
     }
 }

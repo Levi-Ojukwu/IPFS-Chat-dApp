@@ -87,11 +87,11 @@ contract NameServiceTest is Test {
         nameServiceContract.getDomainDetails("test");
     }
 
-    function testUpdateAvatarURI() public {
+    function testUpdateEnsDP() public {
         switchSigner(A);
         nameServiceContract.registerNameService("test", "test");
 
-        nameServiceContract.updateDomainAvatar("test", "ipfs://newAvatar.jpg");
+        nameServiceContract.updateEnsDP("test", "ipfs://newAvatar.jpg");
 
         (, string memory _avatarURI, ) = nameServiceContract.getDomainDetails(
             "test"
@@ -110,7 +110,7 @@ contract NameServiceTest is Test {
         vm.expectRevert(
             abi.encodeWithSelector(LibENSErrors.NotDomainOwner.selector)
         );
-        nameServiceContract.updateDomainAvatar("test", "ipfs://newAvatar.jpg");
+        nameServiceContract.updateEnsDP("test", "ipfs://newAvatar.jpg");
     }
 
     function testUpdateAvatarURIFailForUnregigsteredDomains() public {
@@ -119,7 +119,7 @@ contract NameServiceTest is Test {
         vm.expectRevert(
             abi.encodeWithSelector(LibENSErrors.DomainNotRegistered.selector)
         );
-        nameServiceContract.updateDomainAvatar("test", "ipfs://newAvatar.jpg");
+        nameServiceContract.updateEnsDP("test", "ipfs://newAvatar.jpg");
     }
 
     function switchSigner(address _newSigner) public {

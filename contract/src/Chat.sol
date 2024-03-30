@@ -4,54 +4,81 @@ pragma solidity ^0.8.20;
 
 import {LibChatEvents} from "./libraries/LibChat.sol";
 
+import {Struct, INameService} from "./interfaces/INameService.sol";
+
 contract ChatDapp {
-    uint256 chatId = 1;
     struct Message {
         address sender;
         address receiver;
-        bytes32 content;
-        uint256 timestamp;
+        string content;
     }
 
-    mapping(address => mapping(address => uint256)) public messages;
+    mapping(address => mapping(address => Message[])) public chatHistory;
 
-    mapping(uint256 => Message[]) chatSession;
+    INameService public nameService;
 
-    // event MessageSent(
-    //     address indexed sender,
-    //     address indexed receiver,
-    //     uint256 timestamp
-    // );
+    Struct.DomainDetails[] registeredName;
 
-    function sendMessage(address _receiver, bytes32 _content) external {
-        uint256 _chatSession = chatCheck(msg.sender, _receiver);
-        if (_chatSession == 0) {
-            _chatSession = chatId;
-            messages[msg.sender][_receiver] = _chatSession;
-            chatId++;
-        }
-    
-        Message memory _message = Message(msg.sender, _receiver, _content, block.timestamp);
-        chatSession[_chatSession].push(_message);
-    
-        emit LibChatEvents.MessageSent(msg.sender, _receiver, block.timestamp);
+    constructor(address _nameServiceAddress) {
+        nameService = INameService(_nameServiceAddress);
     }
 
-    function getMessages(address _sender, address _receiver)
+    function sendMessage(string memory _receiver, string memory _content) external {
+        (address receiverAddress, , ) = nameService.getEnsDetails(_receiver);
+        require(receiverAddress != address(0), "Receiver not registered");
+
+        Message memory _message = Message(
+            msg.sender,
+            receiverAddress,
+            _content
+        );
+        chatHistory[msg.sender][receiverAddress].push(_message);
+
+        emit LibChatEvents.MessageSent(msg.sender, receiverAddress, _content);
+    }
+
+    function getMessages(string memory _sender, string memory _receiver)
         external
         view
         returns (Message[] memory)
     {
-        uint256 _chatSession = chatCheck(_sender, _receiver);
-        return chatSession[_chatSession];
+        (address senderAddress, , ) = nameService.getEnsDetails(_sender);
+        require(senderAddress != address(0), "Sender not registered");
+
+        (address receiverAddress, , ) = nameService.getEnsDetails(_receiver);
+        require(receiverAddress != address(0), "Receiver not registered");
+
+        return chatHistory[msg.sender][receiverAddress];
     }
 
-    function chatCheck(address sender, address receiver) private view returns (uint256) {
-        if (messages[sender][receiver] != 0) {
-            return messages[sender][receiver];
-        } else if (messages[receiver][sender] != 0) {
-            return messages[receiver][sender];
-        }
-        return 0;
+    function getRegisteredUsers() external view returns (Struct.DomainDetails[] memory) {
+        return nameService.getAllRegisteredUsers();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // function chatCheck(address sender, address receiver) private view returns (uint256) {
+    //     if (chatHistory[sender][receiver] != 0) {
+    //         return chatHistory[sender][receiver];
+    //     } else if (chatHistory[receiver][sender] != 0) {
+    //         return chatHistory[receiver][sender];
+    //     }
+    //     return 0;
+    // }
 }
