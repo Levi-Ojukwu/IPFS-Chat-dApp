@@ -92,18 +92,19 @@ export default function Chat() {
   return (
     <div className="flex h-[88vh]">
       {/* Sidebar */}
-      <div className="w-1/4 bg-[#0f1536] p-4">
+      <div className="w-1/4 bg-[#0f1536] pl-0 pt-3 p-4">
         <h2 className="text-xl text-gray-300 font-semibold mb-4">Contacts</h2>
         <ul>
           {registeredUsers.map((user, index) => (
             <li
               key={index}
-              onClick={() => selectReceiver(user)}
-              className={`cursor-pointer p-2 rounded-lg hover:bg-gray-300 ${
-                selectedUser === user ? "bg-gray-300" : ""
+              onClick={() => selectReceiver(user.ensName)}
+              className={`flex items-center gap-5  cursor-pointer p-3 pl-4 rounded-sm hover:bg-[#1a2142] w-screen ${
+                selectedUser === user.ensName ? "bg-[#162151]" : ""
               }`}
             >
-              {user}
+              <img src={`${import.meta.env.VITE_GATEWAY_URL}${user.DisplayPictureURI}`} alt="" className="w-10 h-10 rounded-full  " />
+              {user.ensName}
             </li>
           ))}
         </ul>
@@ -114,7 +115,7 @@ export default function Chat() {
         {/* Chat Header */}
         <div className="bg-[#0f1536] pt-4 py-3 px-4 flex items-center justify-between">
           <span className="text-xl text-gray-300 font-semibold">
-            {selectedUser ? "" : "Select a contact"}
+            {selectedUser ? selectedUser : "Select a contact"}
           </span>
           <span>{senderEnsName}</span>
         </div>
@@ -155,7 +156,7 @@ export default function Chat() {
             value={messageContent}
             onChange={(e) => setMessageContent(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 mr-2 bg-gray-600 text-gray-700 focus:outline-none border border-gray-500 rounded-full px-4 py-2"
+            className="flex-1 mr-2 bg-gray-600 text-white focus:outline-none border border-gray-500 rounded-full px-4 py-2"
           />
           <button
             onClick={sendMessage}

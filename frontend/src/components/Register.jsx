@@ -46,7 +46,7 @@ export default function RegisterENS() {
 
       try {
         const tx = await contract.registerNameService(
-          ethers.encodeBytes32String(ensName),
+          ensName,
           fileUrl.IpfsHash
         );
         const receipt = await tx.wait();
@@ -157,7 +157,7 @@ export default function RegisterENS() {
   return (
     <div>
       <Hero />
-      <div className="ml-20 mt-28">
+      <div className="ml-20 mt-16">
       <div className="my-12 ml-5 border-2 border-purple-700 bg-purple-300 max-w-lg p-8 rounded-lg">
         <input
           type="file"
