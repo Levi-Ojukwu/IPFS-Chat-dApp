@@ -90,7 +90,7 @@ export default function Chat() {
   }, []);
 
   return (
-    <div className="flex h-[88vh]">
+    <div className="flex h-[85vh]">
       {/* Sidebar */}
       <div className="w-1/4 bg-[#0f1536] pl-0 pt-3 p-4">
         <h2 className="text-xl text-gray-300 font-semibold mb-4">Contacts</h2>
@@ -99,12 +99,18 @@ export default function Chat() {
             <li
               key={index}
               onClick={() => selectReceiver(user.ensName)}
-              className={`flex items-center gap-5  cursor-pointer p-3 pl-4 rounded-sm hover:bg-[#1a2142] w-screen ${
+              className={`flex items-center gap-5  cursor-pointer p-3 pl-4 rounded-sm hover:bg-[#1a2142] w-[40vw] ${
                 selectedUser === user.ensName ? "bg-[#162151]" : ""
               }`}
             >
               <img src={`${import.meta.env.VITE_GATEWAY_URL}${user.DisplayPictureURI}`} alt="" className="w-10 h-10 rounded-full  " />
-              {user.ensName}
+              <div>
+                <div className="flex items-center gap-20">
+                  {user.ensName}
+                  <p className="text-sm text-gray-400">2:30</p>
+                </div>
+                <p className="text-xs text-gray-600">How are you doing</p>
+              </div>
             </li>
           ))}
         </ul>
@@ -121,7 +127,7 @@ export default function Chat() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 bg-gray-800 px-4 py-2 overflow-y-scroll">
+        <div className="flex-1 bg-gray-800 w- px-4 py-2">
           {messages.map((msg, index) => (
             <div
               key={index}
